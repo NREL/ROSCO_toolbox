@@ -36,7 +36,10 @@ class ControllerInterface():
     """
 
     def __init__(self, lib_name, param_filename='DISCON.IN',
-                 wind_speed_init=10.0, rotor_rpm_init=1.0/rpm2RadSec):
+                 wind_speed_init=10.0,
+                 rotor_rpm_init=1.0/rpm2RadSec,
+                 yaw_init=0.0,
+                 yaw_error_init=0.0):
         """
         Setup the interface
         """
@@ -61,8 +64,9 @@ class ControllerInterface():
         self.avrSWAP[2] = self.DT
         self.avrSWAP[60] = self.num_blade
         self.avrSWAP[20] = rotor_rpm_init*rpm2RadSec
+        self.avrSWAP[23] = yaw_error_init
         self.avrSWAP[26] = wind_speed_init
-
+        self.avrSWAP[36] = yaw_init*deg2rad
 
         # Code this as first casll
         self.avrSWAP[0] = 0
@@ -103,7 +107,7 @@ class ControllerInterface():
         self.avrSWAP = data
 
 
-    def call_controller(self,t,dt,pitch,torque,genspeed,geneff,rotspeed,ws):
+    def call_controller(self,t,dt,pitch,torque,genspeed,geneff,rotspeed,ws,yaw=None,yawerr=None):
         '''
         Runs the controller. Passes current turbine state to the controller, and returns control inputs back
         
@@ -123,6 +127,11 @@ class ControllerInterface():
                   rotor speed, (rad/s)
         ws: float
             wind speed, (m/s)
+        yaw: float, optional
+            nacelle yaw position (from north) (deg)
+        yawerr: float, optional
+            yaw misalignment, defined as the wind direction minus the yaw
+            position (deg)
         '''
 
         # Add states to avr
@@ -136,6 +145,10 @@ class ControllerInterface():
         self.avrSWAP[19] = genspeed
         self.avrSWAP[20] = rotspeed
         self.avrSWAP[26] = ws
+        if yaw is not None:
+            assert (yawerr is not None)
+            self.avrSWAP[23] = yawerr
+            self.avrSWAP[36] = yaw*deg2rad
 
         # call controller
         self.call_discon()
@@ -144,7 +157,11 @@ class ControllerInterface():
         self.pitch = self.avrSWAP[41]
         self.torque = self.avrSWAP[46]
 
-        return(self.torque,self.pitch)
+        if yaw is None:
+            return self.torque,self.pitch
+        else:
+            self.yawrate = self.avrSWAP[47]           
+            return self.torque,self.pitch,self.yawrate
 
     def show_control_values(self):
         '''
