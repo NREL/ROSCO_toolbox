@@ -35,7 +35,8 @@ class ControllerInterface():
 
     """
 
-    def __init__(self, lib_name, param_filename='DISCON.IN'):
+    def __init__(self, lib_name, param_filename='DISCON.IN',
+                 wind_speed_init=10.0, rotor_rpm_init=1.0/rpm2RadSec):
         """
         Setup the interface
         """
@@ -59,8 +60,8 @@ class ControllerInterface():
         # Define some avrSWAP parameters
         self.avrSWAP[2] = self.DT
         self.avrSWAP[60] = self.num_blade
-        self.avrSWAP[20] = 1 # HARD CODE initial rot speed = 1 rad/s
-        self.avrSWAP[26] = 10 # HARD CODE initial wind speed = 10 m/s
+        self.avrSWAP[20] = rotor_rpm_init*rpm2RadSec
+        self.avrSWAP[26] = wind_speed_init
 
 
         # Code this as first casll
