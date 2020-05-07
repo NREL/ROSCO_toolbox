@@ -115,7 +115,7 @@ class ControllerInterface():
         self.avrSWAP = data
 
 
-    def call_controller(self,t,dt,pitch,torque,genspeed,geneff,rotspeed,ws):
+    def call_controller(self, turbine_state): 
         '''
         Runs the controller. Passes current turbine state to the controller, and returns control inputs back
         
@@ -138,16 +138,18 @@ class ControllerInterface():
         '''
 
         # Add states to avr
-        self.avrSWAP[1] = t
-        self.avrSWAP[2] = dt
-        self.avrSWAP[3] = pitch
-        self.avrSWAP[32] = pitch
-        self.avrSWAP[33] = pitch
-        self.avrSWAP[14] = genspeed*torque*geneff
-        self.avrSWAP[22] = torque
-        self.avrSWAP[19] = genspeed
-        self.avrSWAP[20] = rotspeed
-        self.avrSWAP[26] = ws
+        self.avrSWAP[1] = turbine_state['t']
+        self.avrSWAP[2] = turbine_state['dt']
+        self.avrSWAP[3] =  turbine_state['bld_pitch']
+        self.avrSWAP[32] = turbine_state['bld_pitch']
+        self.avrSWAP[33] = turbine_state['bld_pitch']
+        self.avrSWAP[14] = turbine_state['gen_speed'] * turbine_state['gen_torque'] * turbine_state['gen_eff']
+        self.avrSWAP[22] = turbine_state['gen_torque']
+        self.avrSWAP[19] = turbine_state['gen_speed']
+        self.avrSWAP[20] = turbine_state['rot_speed']
+        self.avrSWAP[26] = turbine_state['ws']
+        self.avrSWAP[36] = turbine_state['Yaw_fromNorth']
+        self.avrSWAP[23] = turbine_state['Y_MeasErr']
 
         # call controller
         self.call_discon()
@@ -155,8 +157,13 @@ class ControllerInterface():
         # return controller states
         self.pitch = self.avrSWAP[41]
         self.torque = self.avrSWAP[46]
+        self.nac_yawrate = self.avrSWAP[47]
 
-        return(self.torque,self.pitch)
+        # print('YFN = {}'.format(turbine_state['Yaw_fromNorth']))
+        # print(turbine_state['Y_MeasErr'])
+        # print(self.avrSWAP[47])
+
+        return self.torque, self.pitch, self.nac_yawrate 
 
     def show_control_values(self):
         '''
