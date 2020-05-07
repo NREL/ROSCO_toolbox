@@ -73,10 +73,6 @@ class ControllerInterface():
         self.avrSWAP[26] = wind_speed_init
         self.avrSWAP[36] = yaw_init*deg2rad
         
-
-        self.avrSWAP[26] = wind_speed_init
-        self.avrSWAP[36] = yaw_init*deg2rad
-        
         # Code this as first call
         self.avrSWAP[0] = 0
 
