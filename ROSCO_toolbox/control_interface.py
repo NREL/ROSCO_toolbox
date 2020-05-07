@@ -13,6 +13,7 @@ from ctypes import byref, cdll, c_int, POINTER, c_float, c_char_p, c_double, cre
 import numpy as np
 from numpy.ctypeslib import ndpointer
 
+from ROSCO_toolbox import utilities
 # Some useful constants
 deg2rad = np.deg2rad(1)
 rad2deg = np.rad2deg(1)
