@@ -135,6 +135,11 @@ class ControllerInterface():
                   rotor speed, (rad/s)
         ws: float
             wind speed, (m/s)
+        yaw: float, optional
+            nacelle yaw position (from north) (deg)
+        yawerr: float, optional
+            yaw misalignment, defined as the wind direction minus the yaw
+            position (deg)
         '''
 
         # Add states to avr
