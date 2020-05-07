@@ -76,36 +76,55 @@ class Sim():
 
         print('Running simulation for %s wind turbine.' % self.turbine.TurbineName)
 
-        # Store turbine data for conveniente
+        # Store turbine data for convenience
         dt = t_array[1] - t_array[0]
         R = self.turbine.rotor_radius
         GBRatio = self.turbine.Ng
 
         # Declare output arrays
-        bld_pitch = np.ones_like(t_array) * init_pitch 
+        bld_pitch = np.ones_like(t_array) * init_pitch * deg2rad
         rot_speed = np.ones_like(t_array) * rotor_rpm_init * rpm2RadSec # represent rot speed in rad / s
         gen_speed = np.ones_like(t_array) * rotor_rpm_init * GBRatio * rpm2RadSec # represent gen speed in rad/s
         aero_torque = np.ones_like(t_array) * 1000.0
-        gen_torque = np.ones_like(t_array) # * trq_cont(turbine_dict, gen_speed[0])
+        gen_torque = np.ones_like(t_array) 
         gen_power = np.ones_like(t_array) * 0.0
+        nac_yaw = np.ones_like(t_array) * yaw_init
+        nac_yawerr = np.ones_like(t_array) * 0.0
+        nac_yawrate = np.ones_like(t_array) * 0.0
 
-        
+        # check for wind direction array
+        if isinstance(wd_array, (list, np.ndarray)):
+            if len(ws_array) != len(wd_array):
+                raise ValueError('ws_array and wd_array must be the same length')
+        else:
+            wd_array = np.ones_like(ws_array) * 0.0
+
+
         # Loop through time
         for i, t in enumerate(t_array):
             if i == 0:
                 continue # Skip the first run
             ws = ws_array[i]
+            wd = wd_array[i]
+
+            # ws_x = ws_array[i]*np.cos(wd_array[i] - yaw_angle)
+            # ws_y = ws_array[i]*np.sin(wd_array[i] - yaw_angle)
 
             # Load current Cq data
             tsr = rot_speed[i-1] * self.turbine.rotor_radius / ws
-            cq = self.turbine.Cq.interp_surface([bld_pitch[i-1]],tsr)
-        
+            cq = self.turbine.Cq.interp_surface(bld_pitch[i-1],tsr)
+            cp = self.turbine.Cp.interp_surface(bld_pitch[i-1],tsr)
             # Update the turbine state
             #       -- 1DOF model: rotor speed and generator speed (scaled by Ng)
-            aero_torque[i] = 0.5 * self.turbine.rho * (np.pi * R**2) * cq * R * ws**2
-            rot_speed[i] = rot_speed[i-1] + (dt/self.turbine.J)*(aero_torque[i] * self.turbine.GenEff/100 - self.turbine.Ng * gen_torque[i-1])
-            gen_speed[i] = rot_speed[i] * self.turbine.Ng
+            aero_torque[i] = 0.5 * self.turbine.rho * (np.pi * R**3) * (cp/tsr)* ws**2
+            # aero_torque[i] = 0.5 * self.turbine.rho * (np.pi * R**2) * cq * R * ws**2
+            rot_speed[i] = rot_speed[i-1] + (dt/self.turbine.J)*(aero_torque[i]
+                                                                 * self.turbine.GenEff/100 - self.turbine.Ng * gen_torque[i-1])
+            gen_speed[i] = rot_speed[i] * self.turbine.Ng 
+            #       -- Simple nacelle model
+            nac_yawerr[i] = wd - nac_yaw[i-1]
 
+            # print('rot_speed = {}'.format(cp))
 
             # populate turbine state dictionary
             turbine_state = {}
@@ -126,6 +145,9 @@ class Sim():
             # Calculate the power
             gen_power[i] = gen_speed[i] * gen_torque[i]
 
+            # Calculate the nacelle position
+            nac_yaw[i] = nac_yaw[i-1] + nac_yawrate[i] * dt
+
         # Save these values
         self.bld_pitch = bld_pitch
         self.rot_speed = rot_speed
@@ -135,26 +157,57 @@ class Sim():
         self.gen_power = gen_power
         self.t_array = t_array
         self.ws_array = ws_array
+        self.wd_array = wd_array
+        self.nac_yaw = nac_yaw
 
         if make_plots:
-            fig, axarr = plt.subplots(4,1,sharex=True,figsize=(6,10))
+            # if sum(nac_yaw) > 0:
+            if True:
+                fig, axarr = plt.subplots(5,1,sharex=True,figsize=(6,10))
 
-            ax = axarr[0]
-            ax.plot(self.t_array,self.ws_array)
-            ax.set_ylabel('Wind Speed (m/s)')
-            ax.grid()
-            ax = axarr[1]
-            ax.plot(self.t_array,self.rot_speed)
-            ax.set_ylabel('Rot Speed (rad/s)')
-            ax.grid()
-            ax = axarr[2]
-            ax.plot(self.t_array,self.gen_torque)
-            ax.set_ylabel('Gen Torque (N)')
-            ax.grid()
-            ax = axarr[3]
-            ax.plot(self.t_array,self.bld_pitch*rad2deg)
-            ax.set_ylabel('Bld Pitch (deg)')
-            ax.set_xlabel('Time (s)')
-            ax.grid()
+                ax = axarr[0]
+                ax.plot(self.t_array,self.ws_array)
+                ax.set_ylabel('Wind Speed (m/s)')
+                ax.grid()
+                ax = axarr[1]
+                ax.plot(self.t_array,self.wd_array * 180/np.pi, label='WindDirection')
+                ax.plot(self.t_array,self.nac_yaw * 180/np.pi, label='NacelleAngle')
+                ax.legend(loc='best')
+                ax.set_ylabel('Angle(deg)')
+                ax.set_xlabel('Time (s)')
+                ax.grid()
+                ax = axarr[2]
+                ax.plot(self.t_array,self.rot_speed)
+                ax.set_ylabel('Rot Speed (rad/s)')
+                ax.grid()
+                ax = axarr[3]
+                ax.plot(self.t_array,self.gen_power/1000)
+                ax.set_ylabel('Gen Power (W)')
+                ax.grid()
+                ax = axarr[4]
+                ax.plot(self.t_array,self.bld_pitch*rad2deg)
+                ax.set_ylabel('Bld Pitch (deg)')
+                ax.set_xlabel('Time (s)')
+                ax.grid()
 
+            else:
+                fig, axarr = plt.subplots(4, 1, sharex=True, figsize=(6, 10))
+
+                ax = axarr[0]
+                ax.plot(self.t_array,self.ws_array)
+                ax.set_ylabel('Wind Speed (m/s)')
+                ax.grid()
+                ax = axarr[1]
+                ax.plot(self.t_array,self.rot_speed)
+                ax.set_ylabel('Rot Speed (rad/s)')
+                ax.grid()
+                ax = axarr[2]
+                ax.plot(self.t_array,self.gen_torque)
+                ax.set_ylabel('Gen Torque (N)')
+                ax.grid()
+                ax = axarr[3]
+                ax.plot(self.t_array,self.bld_pitch*rad2deg)
+                ax.set_ylabel('Bld Pitch (deg)')
+                ax.set_xlabel('Time (s)')
+                ax.grid()
         
