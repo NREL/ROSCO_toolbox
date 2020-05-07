@@ -35,10 +35,17 @@ class ControllerInterface():
 
     """
 
-    def __init__(self, lib_name, param_filename='DISCON.IN'):
+    def __init__(self, lib_name, param_filename='DISCON.IN',
+                    wind_speed_init = 10.0,
+                    rotor_rpm_init = 4.0,
+                    yaw_init = 0.0,
+                    yaw_error_init = 0.0):
         """
         Setup the interface
         """
+        fp = utilities.FileProcessing()
+        discon_params = fp.read_DISCON(param_filename
+        )
         self.lib_name = lib_name
         self.param_name = param_filename
 
@@ -59,15 +66,21 @@ class ControllerInterface():
         # Define some avrSWAP parameters
         self.avrSWAP[2] = self.DT
         self.avrSWAP[60] = self.num_blade
-        self.avrSWAP[20] = 1 # HARD CODE initial rot speed = 1 rad/s
-        self.avrSWAP[26] = 10 # HARD CODE initial wind speed = 10 m/s
+        self.avrSWAP[19] = rotor_rpm_init*rpm2RadSec * discon_params['WE_GearboxRatio']
+        self.avrSWAP[20] = rotor_rpm_init*rpm2RadSec
+        self.avrSWAP[23] = yaw_error_init
+        self.avrSWAP[26] = wind_speed_init
+        self.avrSWAP[36] = yaw_init*deg2rad
+        
 
-
-        # Code this as first casll
+        self.avrSWAP[26] = wind_speed_init
+        self.avrSWAP[36] = yaw_init*deg2rad
+        
+        # Code this as first call
         self.avrSWAP[0] = 0
 
         # Put some values in
-        self.avrSWAP[58] = self.char_buffer
+        self.avrSWAP[48] = self.char_buffer
         self.avrSWAP[49] = len(self.param_name)
         self.avrSWAP[50] = self.char_buffer
         self.avrSWAP[51] = self.char_buffer
