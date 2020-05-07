@@ -49,17 +49,23 @@ class Sim():
         self.controller_int = controller_int
 
 
-    def sim_ws_series(self,t_array,ws_array,rotor_rpm_init=10,init_pitch=0.0, make_plots=True):
+    def sim_ws_series(self,t_array,ws_array,rotor_rpm_init=10,init_pitch=0.0, 
+                        wd_array=None, yaw_init = 0.0,
+                        make_plots=True):
         '''
         Simulate simplified turbine model using a complied controller (.dll or similar).
             - currently a 1DOF rotor model
 
         Parameters:
         -----------
-            t_array: float
+            t_array: list-like
                      Array of time steps, (s)
-            ws_array: float
-                      Array of wind speeds, (s)
+            ws_array: list-like
+                      Array of wind speeds, (m/s)
+            wd_array: list-like
+                      Array of wind directions, (rad)
+            wd_array: float
+                      Initial "north", (or constant) yaw angle, (rad)
             rotor_rpm_init: float, optional
                             initial rotor speed, (rpm)
             init_pitch: float, optional
@@ -100,8 +106,22 @@ class Sim():
             rot_speed[i] = rot_speed[i-1] + (dt/self.turbine.J)*(aero_torque[i] * self.turbine.GenEff/100 - self.turbine.Ng * gen_torque[i-1])
             gen_speed[i] = rot_speed[i] * self.turbine.Ng
 
+
+            # populate turbine state dictionary
+            turbine_state = {}
+            turbine_state['t'] = t
+            turbine_state['dt'] = dt
+            turbine_state['ws'] = ws
+            turbine_state['bld_pitch'] = bld_pitch[i-1]
+            turbine_state['gen_torque'] = gen_torque[i-1]
+            turbine_state['gen_speed'] = gen_speed[i]
+            turbine_state['gen_eff'] = self.turbine.GenEff/100
+            turbine_state['rot_speed'] = rot_speed[i]
+            turbine_state['Yaw_fromNorth'] = nac_yaw[i]
+            turbine_state['Y_MeasErr'] = nac_yawerr[i-1]
+            
             # Call the controller
-            gen_torque[i], bld_pitch[i] = self.controller_int.call_controller(t,dt,bld_pitch[i-1],gen_torque[i-1],gen_speed[i],self.turbine.GenEff/100,rot_speed[i],ws)
+            gen_torque[i], bld_pitch[i], nac_yawrate[i] = self.controller_int.call_controller(turbine_state)
 
             # Calculate the power
             gen_power[i] = gen_speed[i] * gen_torque[i]
