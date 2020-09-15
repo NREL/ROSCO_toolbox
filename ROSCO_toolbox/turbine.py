@@ -264,17 +264,23 @@ class Turbine():
 
         # Use airfoil data from FAST file read, assumes AeroDyn 15, assumes 1 Re num per airfoil
         af_dict = {}
+        Alpha = np.linspace(-180, 180, 400)
         try:
             for i, _ in enumerate(self.fast.fst_vt['AeroDyn15']['af_data']):
-                Re    = [self.fast.fst_vt['AeroDyn15']['af_data'][i][0]['Re']]
-                Alpha = self.fast.fst_vt['AeroDyn15']['af_data'][i][0]['Alpha']
-                Cl    = self.fast.fst_vt['AeroDyn15']['af_data'][i][0]['Cl']
-                Cd    = self.fast.fst_vt['AeroDyn15']['af_data'][i][0]['Cd']
-                Cm    = self.fast.fst_vt['AeroDyn15']['af_data'][i][0]['Cm']
+                # normalize each polar
+                for polar in self.fast.fst_vt['AeroDyn15']['af_data'][i]:
+                    polar['Cl'] = interpolate.pchip_interpolate(polar['Alpha'], polar['Cl'], Alpha)
+                    polar['Cd'] = interpolate.pchip_interpolate(polar['Alpha'], polar['Cd'], Alpha)
+                    polar['Cm'] = interpolate.pchip_interpolate(polar['Alpha'], polar['Cm'], Alpha)
+
+                Re    = np.array([ polar['Re'] for polar in self.fast.fst_vt['AeroDyn15']['af_data'][i]])*1E6
+                Cl    = np.array(np.column_stack([ np.array(polar['Cl']) for polar in self.fast.fst_vt['AeroDyn15']['af_data'][i]]))
+                Cd    = np.array(np.column_stack([ np.array(polar['Cd']) for polar in self.fast.fst_vt['AeroDyn15']['af_data'][i]]))
+                Cm    = np.array(np.column_stack([ np.array(polar['Cm']) for polar in self.fast.fst_vt['AeroDyn15']['af_data'][i]]))
                 af_dict[i] = CCAirfoil(Alpha, Re, Cl, Cd, Cm)
         except: # Read airfoil tables without tab cabalities (will remove once wisdem master branch cleans up)
             for i, _ in enumerate(self.fast.fst_vt['AeroDyn15']['af_data']):
-                Re    = [self.fast.fst_vt['AeroDyn15']['af_data'][i]['Re']]
+                Re    = np.array([self.fast.fst_vt['AeroDyn15']['af_data'][i]['Re']])*1E6
                 Alpha = self.fast.fst_vt['AeroDyn15']['af_data'][i]['Alpha']
                 Cl    = self.fast.fst_vt['AeroDyn15']['af_data'][i]['Cl']
                 Cd    = self.fast.fst_vt['AeroDyn15']['af_data'][i]['Cd']
