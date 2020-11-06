@@ -24,6 +24,7 @@ from ofTools.case_gen.runFAST_pywrapper import runFAST_pywrapper_batch
 
 from pCrunch import pdTools
 from pCrunch import Processing, Analysis
+from ROSCO_toolbox import utilities as ROSCO_utilities
 
 
 class ROSCO_testing():
@@ -456,7 +457,13 @@ class ROSCO_testing():
             self.windDir = os.path.join(run_dir_init, 'wind')  # wind in base runDir
 
             # Point to different DISCON.IN files using more_case_inputs
-            more_case_inputs[('ServoDyn', 'DLL_InFile')] = {'vals': [discon], 'group': 0}
+            more_case_inputs = {}
+            
+            # Read DISCON infile
+            file_processing = ROSCO_utilities.FileProcessing()
+            discon_vt = file_processing.read_DISCON(discon)
+            for discon_input in discon_vt:
+                more_case_inputs[('DISCON_in',discon_input)] = {'vals': [discon_vt[discon_input]], 'group': 0}
             self.windDir = os.path.join(run_dir_init, 'wind')  # wind in base runDir
 
             if testtype.lower() == 'light':
