@@ -51,6 +51,7 @@ REQUIRED = [
     'pytest',
     'scipy',
     'pyYAML',
+    'future'
 ]
 
 # Read the docs, one day, so we'll throw it in here!
