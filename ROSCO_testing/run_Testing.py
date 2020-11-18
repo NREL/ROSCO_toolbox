@@ -100,14 +100,16 @@ if __name__ == "__main__":
     rt_kwargs['mpi_run']    = False                 # run using mpi
     rt_kwargs['mpi_comm_map_down'] = []             # core mapping for MPI
     rt_kwargs['outfile_fmt'] = 2                    # 1 = .txt, 2 = binary, 3 = both
+    rt_kwargs['rosco_path'] = '/Users/dzalkind/Tools/ROSCO_toolbox/build/temp.macosx-10.9-x86_64-3.8_rosco/libdiscon.dylib'
 
     # ---- Define test type ----
     turbine2test = 'IEA-15MW'   # IEA-15MW or NREL-5MW
-    testtype     = 'lite'       # lite, heavy, binary-comp, discon-comp
+    testtype     = 'discon-comp'       # lite, heavy, binary-comp, discon-comp
 
     # Only fill one of these if comparing controllers
     rosco_binaries = [os.path.join(os.getcwd(), glob.glob('../ROSCO/build/libdiscon*')[0])] # Differently named libdiscons to compare
-    discon_files = []   # Differently named DISCON.IN files to compare
+    discon_files = [os.path.join(this_dir,'DISCON-UMaineSemi_Orig.IN'),
+                    os.path.join(this_dir,'DISCON-UMaineSemi_ConstPwr.IN')    ]   # Differently named DISCON.IN files to compare
 
 
     # Run testing
