@@ -22,8 +22,8 @@ from ofTools.fast_io.FAST_reader import InputReader_OpenFAST
 from ofTools.case_gen.CaseGen_IEC import CaseGen_IEC
 from ofTools.case_gen.runFAST_pywrapper import runFAST_pywrapper_batch
 
-from pCrunch import pdTools
-from pCrunch import Processing, Analysis
+# from pCrunch import pdTools
+# from pCrunch import Processing, Analysis
 from ROSCO_toolbox import utilities as ROSCO_utilities
 
 
@@ -460,8 +460,7 @@ class ROSCO_testing():
             more_case_inputs = {}
             
             # Read DISCON infile
-            file_processing = ROSCO_utilities.FileProcessing()
-            discon_vt = file_processing.read_DISCON(discon)
+            discon_vt = ROSCO_utilities.read_DISCON(discon)
             for discon_input in discon_vt:
                 more_case_inputs[('DISCON_in',discon_input)] = {'vals': [discon_vt[discon_input]], 'group': 0}
             self.windDir = os.path.join(run_dir_init, 'wind')  # wind in base runDir
