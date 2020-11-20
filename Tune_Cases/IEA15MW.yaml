@@ -21,8 +21,8 @@ turbine_params:
   bld_edgewise_freq:  4.0324                # Blade edgewise first natural frequency [rad/s]
   bld_flapwise_freq:  3.4872                # Blade flapwise first natural frequency [rad/s]
   TSR_operational:    9.0
-  twr_freq:  3.355 # for semi only!
-  ptfm_freq: 0.213 # for semi only!
+  twr_freq:  3.12 # for semi only!
+  ptfm_freq: 0.226 # for semi only!
 #------------------------------- CONTROLLER PARAMETERS ----------------------------------
 controller_params:
   # Controller flags 
@@ -41,7 +41,7 @@ controller_params:
   Flp_Mode:           0                     # Flap control mode {0: no flap control, 1: steady state flap angle, 2: Proportional flap control}
   # Controller parameters       
   zeta_pc:            1.0                   # Pitch controller desired damping ratio [-]
-  omega_pc:           0.3                  # Pitch controller desired natural frequency [rad/s]
+  omega_pc:           0.2                  # Pitch controller desired natural frequency [rad/s]
   zeta_vs:            0.85                   # Torque controller desired damping ratio [-]
   omega_vs:           0.12                 # Torque controller desired natural frequency [rad/s]
   # Optional - these can be defined, but do not need to be
