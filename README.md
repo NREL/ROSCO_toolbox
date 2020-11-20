@@ -42,6 +42,7 @@ You should then do step three _OR_ four. If you do not want to compile the ROSCO
 	```
 	git clone https://github.com/NREL/ROSCO_toolbox.git
 	cd ROSCO_toolbox
+	git checkout focal
 	git submodule init
 	git submodule update
 	conda install compilers 					# (Mac/Linux only)
@@ -53,6 +54,7 @@ You should then do step three _OR_ four. If you do not want to compile the ROSCO
 	```
 	git clone https://github.com/NREL/ROSCO_toolbox.git
 	cd ROSCO_toolbox
+	git checkout focal
 	python setup.py install 
 	```
 
