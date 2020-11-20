@@ -81,8 +81,10 @@ def write_DISCON(turbine, controller, param_file='DISCON.IN', txt_filename='Cp_C
     file.write('{:<13.5f}       ! F_LPFDamping		- Damping coefficient [used only when F_FilterType = 2]\n'.format(controller.F_LPFDamping))
     file.write('{:<13.5f}       ! F_NotchCornerFreq	- Natural frequency of the notch filter, [rad/s]\n'.format(turbine.twr_freq))
     file.write('{:<10.5f}{:<9.5f} ! F_NotchBetaNumDen	- Two notch damping values (numerator and denominator, resp) - determines the width and depth of the notch, [-]\n'.format(0.0,0.25))
-    file.write('{:<014.5f}      ! F_SSCornerFreq    - Corner frequency (-3dB point) in the first order low pass filter for the setpoint smoother, [rad/s].\n'.format(controller.ss_cornerfreq))
+    file.write('{:<014.5f}      ! F_SSCornerFreq    - Corner frequency (-3dB point) in the first order low pass filter for the setpoint smoother, [rad/s].\n'.format(controller.f_ss_cornerfreq))
+    file.write('{:<014.5f}      ! F_WECornerFreq    - Corner frequency (-3dB point) in the first order low pass filter for the wind speed estimate [rad/s].\n'.format(controller.f_we_cornerfreq))
     file.write('{:<10.5f}{:<9.5f} ! F_FlCornerFreq    - Natural frequency and damping in the second order low pass filter of the tower-top fore-aft motion for floating feedback control [rad/s, -].\n'.format(turbine.ptfm_freq, 1.0))
+    file.write('{:<014.5f}      ! F_FlHighPassFreq    - Natural frequency of first-order high-pass filter for nacelle fore-aft motion [rad/s].\n'.format(controller.f_fl_highpassfreq))
     file.write('{:<10.5f}{:<9.5f} ! F_FlpCornerFreq   - Corner frequency and damping in the second order low pass filter of the blade root bending moment for flap control [rad/s, -].\n'.format(turbine.bld_flapwise_freq*1/3, 1.0))
     
     file.write('\n')
@@ -367,7 +369,9 @@ def DISCON_dict(turbine, controller, txt_filename=None):
     DISCON_dict['F_LPFDamping']		    = controller.F_LPFDamping
     DISCON_dict['F_NotchCornerFreq']    = turbine.twr_freq
     DISCON_dict['F_NotchBetaNumDen']    = [0.0, 0.25]
-    DISCON_dict['F_SSCornerFreq']       = controller.ss_cornerfreq
+    DISCON_dict['F_WECornerFreq']       = controller.f_we_cornerfreq
+    DISCON_dict['F_SSCornerFreq']       = controller.f_ss_cornerfreq
+    DISCON_dict['F_FlHighPassFreq']     = controller.f_fl_highpassfreq
     DISCON_dict['F_FlCornerFreq']       = [turbine.ptfm_freq, 1.0]
     DISCON_dict['F_FlpCornerFreq']      = [turbine.bld_flapwise_freq*1/3, 1.0]
     # ------- BLADE PITCH CONTROL -------
