@@ -12,14 +12,19 @@ In this example:
 
 # Python modules
 import matplotlib.pyplot as plt 
-import yaml 
+import yaml, os
 # ROSCO toolbox modules 
 from ROSCO_toolbox import controller as ROSCO_controller
 from ROSCO_toolbox import turbine as ROSCO_turbine
 from ROSCO_toolbox import sim as ROSCO_sim
 
+this_dir = os.path.dirname(__file__)
+example_out_dir = os.path.join(this_dir,'examples_out')
+if not os.path.isdir(example_out_dir):
+  os.makedirs(example_out_dir)
+
 # Load yaml file 
-parameter_filename = 'NREL5MW_example.yaml'
+parameter_filename = os.path.join(this_dir,'NREL5MW_example.yaml')
 inps = yaml.safe_load(open(parameter_filename))
 path_params         = inps['path_params']
 turbine_params      = inps['turbine_params']
@@ -45,4 +50,8 @@ plt.plot(controller.v, controller.ps_min_bld_pitch, label='Minimum Pitch Schedul
 plt.legend()
 plt.xlabel('Wind speed (m/s)')
 plt.ylabel('Blade pitch (rad)')
-plt.show()
+
+if False:
+  plt.show()
+else:
+  plt.savefig(os.path.join(example_out_dir,'07_MinPitch.png'))

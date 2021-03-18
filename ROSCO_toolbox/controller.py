@@ -312,7 +312,8 @@ class Controller():
         # --- Floating feedback term ---
         if self.Fl_Mode == 1: # Floating feedback
             Kp_float = (dtau_dv/dtau_dbeta) * turbine.TowerHt * Ng 
-            self.Kp_float = Kp_float[len(v_below_rated)+1]
+            f_kp     = interpolate.interp1d(v,Kp_float)
+            self.Kp_float = f_kp(turbine.v_rated * (1.05))   # get Kp at v_rated + 0.5 m/s
             # Turn on the notch filter if floating
             self.F_NotchType = 2
             
@@ -405,13 +406,13 @@ class Controller():
         Kcd = (Cdp - Cd0)/( (Ctrl_flp-Ctrl)*deg2rad )
 
         # Find integrated constants
-        kappa = np.zeros(len(v_rel))
+        self.kappa = np.zeros(len(v_rel))
         C1 = np.zeros(len(v_rel))
         C2 = np.zeros(len(v_rel))
         for i, (v_sec,phi) in enumerate(zip(v_rel, phi_vec)):
             C1[i] = integrate.trapz(0.5 * turbine.rho * turbine.chord * v_sec[0]**2 * turbine.span * Kcl * np.cos(phi))
             C2[i] = integrate.trapz(0.5 * turbine.rho * turbine.chord * v_sec[0]**2 * turbine.span * Kcd * np.sin(phi))
-            kappa[i]=C1[i]+C2[i]
+            self.kappa[i]=C1[i]+C2[i]
 
         # ------ Controller tuning -------
         # Open loop blade response
@@ -426,8 +427,8 @@ class Controller():
         if (self.zeta_flp == 0 or self.omega_flp == 0) or (not self.zeta_flp or not self.omega_flp):
             sys.exit('ERROR! --- Zeta and Omega flap must be nonzero for Flp_Mode >= 1 ---')
 
-        self.Kp_flap = (2*self.zeta_flp*self.omega_flp - 2*zetaf*omegaf)/(kappa*omegaf**2)
-        self.Ki_flap = (self.omega_flp**2 - omegaf**2)/(kappa*omegaf**2)
+        self.Kp_flap = (2*self.zeta_flp*self.omega_flp - 2*zetaf*omegaf)/(self.kappa*omegaf**2)
+        self.Ki_flap = (self.omega_flp**2 - omegaf**2)/(self.kappa*omegaf**2)
         
 class ControllerBlocks():
     '''

@@ -159,7 +159,7 @@ class Turbine():
             txt_filename: str, optional
                           filename for *.txt, only used if rot_source='txt'
         """
-        from ofTools.fast_io.FAST_reader import InputReader_OpenFAST
+        from ROSCO_toolbox.ofTools.fast_io.FAST_reader import InputReader_OpenFAST
 
         print('Loading FAST model: %s ' % FAST_InputFile)
         self.TurbineName = FAST_InputFile.strip('.fst')
@@ -248,7 +248,7 @@ class Turbine():
                   Dictionary containing fast model details - defined using from InputReader_OpenFAST (distributed as a part of AeroelasticSE)
 
         '''
-        from wisdem.ccblade import CCAirfoil, CCBlade
+        from wisdem.ccblade.ccblade import CCAirfoil, CCBlade
 
         print('Loading rotor performance data from CC-Blade.')
 
@@ -316,8 +316,8 @@ class Turbine():
             'serial' - run in serial, 'multi' - run using python multiprocessing tools, 
             'mpi' - run using mpi tools
         '''
-        from ofTools.case_gen import runFAST_pywrapper, CaseGen_General
-        from ofTools.util import FileTools
+        from ROSCO_toolbox.ofTools.case_gen import runFAST_pywrapper, CaseGen_General
+        from ROSCO_toolbox.ofTools.util import FileTools
         # Load pCrunch tools
         from pCrunch import pdTools, Processing
 
@@ -499,8 +499,8 @@ class Turbine():
         -----------
             self - note: needs to contain fast input file info provided by load_from_fast.
         '''
-        from ofTools.fast_io.FAST_reader import InputReader_OpenFAST
-        from wisdem.ccblade import CCAirfoil, CCBlade
+        from ROSCO_toolbox.ofTools.fast_io.FAST_reader import InputReader_OpenFAST
+        from wisdem.ccblade.ccblade import CCAirfoil, CCBlade
 
         # Create CC-Blade Rotor
         r0 = np.array(self.fast.fst_vt['AeroDynBlade']['BlSpn']) 
@@ -548,7 +548,7 @@ class Turbine():
         self.span = r 
         self.chord = chord
         self.twist = theta
-        self.bld_flapwise_damp = self.fast.fst_vt['ElastoDynBlade']['BldFlDmp1']/100 * 0.7
+        self.bld_flapwise_damp = self.fast.fst_vt['ElastoDynBlade']['BldFlDmp1']/100
 
 class RotorPerformance():
     '''
@@ -658,7 +658,7 @@ class RotorPerformance():
         plt.title('Power Coefficient', fontsize=14, fontweight='bold')
         plt.xlabel('Pitch Angle [deg]', fontsize=14, fontweight='bold')
         plt.ylabel('TSR [-]', fontsize=14, fontweight='bold')
-        plt.scatter(max_beta_id, max_tsr_id, color='red')
+        plt.scatter(max_beta_id * rad2deg, max_tsr_id, color='red')
         plt.annotate('max = {:<1.3f}'.format(np.max(self.performance_table)),
                     (max_beta_id+0.2, max_tsr_id+0.2), color='red')
         plt.xticks(fontsize=12)

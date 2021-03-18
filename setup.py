@@ -41,7 +41,7 @@ URL = 'https://github.com/NREL/ROSCO_toolbox'
 EMAIL = 'nikhar.abbas@nrel.gov'
 AUTHOR = 'NREL National Wind Technology Center'
 REQUIRES_PYTHON = '>=3.4'
-VERSION = '2.1.4'
+VERSION = '2.2.0'
 
 # These packages are required for all of the code to be executed. 
 # - Maybe you can get away with older versions...
@@ -96,9 +96,9 @@ class CMakeBuildExt(build_ext):
 
             cmake_args = ['-DBUILD_SHARED_LIBS=OFF']
             cmake_args += ['-DCMAKE_Fortran_FLAGS=-ffree-line-length-0']
+            cmake_args += ['-DCMAKE_INSTALL_PREFIX={}'.format(localdir)]
 
             if platform.system() == 'Windows':
-                cmake_args += ['-DCMAKE_INSTALL_PREFIX={}'.format(localdir)]
                 if self.compiler.compiler_type == 'msvc':
                     cmake_args += ['-DCMAKE_GENERATOR_PLATFORM=x64']
                 else:
