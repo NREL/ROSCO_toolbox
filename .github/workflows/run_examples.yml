@@ -52,6 +52,12 @@ jobs:
         run: |
           python setup.py develop --compile-rosco
 
+      # Install OpenFAST
+      - name: Install OpenFAST
+        shell: pwsh
+        run: |
+          conda install openfast
+          
       # Run examples
       - name: Run examples
         shell: pwsh
