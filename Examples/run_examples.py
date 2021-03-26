@@ -9,11 +9,11 @@ import importlib
 def run_all_scripts(folder_string, all_scripts):
     scripts = [m for m in all_scripts if m.find(folder_string) >= 0]
     for k in scripts:
-        try:
-            execute_script(k)
-        except Exception as e:
-            print("Failed to run,", k)
-            raise
+        # try:
+        execute_script(k)
+        # except Exception as e:
+        #     print("Failed to run,", k)
+        #     raise
 
 def execute_script(fscript):
     # thisdir = os.path.dirname(os.path.realpath(__file__))
