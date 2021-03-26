@@ -1,3 +1,4 @@
+name: rosco-env
 channels:
   - conda-forge
   - defaults
