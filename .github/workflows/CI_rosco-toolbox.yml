@@ -13,7 +13,10 @@ jobs:
       matrix:
         os: ["ubuntu-latest"] #, "macOS-latest"]
         python-version: ["3.8"]
-        
+    defaults:
+      run:
+        shell: bash -l {0}
+
     steps:
       - name: Checkout repository and submodules
         uses: actions/checkout@v2
@@ -34,7 +37,7 @@ jobs:
       # Install dependencies of ROSCO toolbox
       - name: Add dependencies ubuntu specific
         if: false == contains( matrix.os, 'windows')
-        shell: pwsh # putting in a shell command makes for compile linking problems later
+        # shell: pwsh # putting in a shell command makes for compile linking problems later
         # (if you use the shell here, cannot use 'compiler' package, but mpi only seems to work with it)
         run: |
           conda install -y compilers
@@ -43,7 +46,7 @@ jobs:
 
       # Install ROSCO toolbox
       - name: Install ROSCO toolbox
-        shell: pwsh
+        # shell: pwsh
         run: |
           python setup.py develop --compile-rosco
           
