@@ -8,3 +8,4 @@ dependencies:
   - pytest
   - scipy
   - pyYAML
+  - pandas
