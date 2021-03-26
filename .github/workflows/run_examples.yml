@@ -56,6 +56,6 @@ jobs:
       - name: Run examples
         shell: pwsh
         run: |
-          cd examples
+          cd Examples
           python run_examples.py
           
