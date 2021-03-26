@@ -24,7 +24,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
-          channels: [conda-forge, general]
+          channels: conda-forge, general
           auto-update-conda: true
           python-version: 3.8
           environment-file: environment.yml
@@ -74,7 +74,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
-          channels: [conda-forge, general]
+          channels: conda-forge, general
           auto-update-conda: true
           python-version: 3.8
           environment-file: environment.yml
