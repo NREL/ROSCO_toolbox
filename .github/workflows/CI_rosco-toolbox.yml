@@ -85,7 +85,7 @@ jobs:
       - name: Add dependencies ubuntu specific
         if: false == contains( matrix.os, 'windows')
         # shell: bash # putting in a shell command makes for compile linking problems later
-        (if you use the shell here, cannot use 'compiler' package, but mpi only seems to work with it)
+        # (if you use the shell here, cannot use 'compiler' package, but mpi only seems to work with it)
         run: |
           conda install -y compilers
           conda install -y wisdem
