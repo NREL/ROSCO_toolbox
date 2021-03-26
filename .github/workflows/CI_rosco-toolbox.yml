@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout repository and submodules
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
@@ -24,7 +26,6 @@ jobs:
           auto-update-conda: true
           python-version: 3.8
           environment-file: environment.yml
-          submodules: recursive
 
       # Install dependencies of ROSCO toolbox
       - name: Add dependencies ubuntu specific
