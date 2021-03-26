@@ -24,7 +24,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
-          channels: conda-forge
+          channels: [conda-forge, general]
           auto-update-conda: true
           python-version: 3.8
           environment-file: environment.yml
@@ -74,7 +74,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
-          channels: conda-forge
+          channels: [conda-forge, general]
           auto-update-conda: true
           python-version: 3.8
           environment-file: environment.yml
@@ -84,8 +84,8 @@ jobs:
       # Install dependencies of ROSCO toolbox
       - name: Add dependencies ubuntu specific
         if: false == contains( matrix.os, 'windows')
-        shell: bash # putting in a shell command makes for compile linking problems later
-        # (if you use the shell here, cannot use 'compiler' package, but mpi only seems to work with it)
+        # shell: bash # putting in a shell command makes for compile linking problems later
+        (if you use the shell here, cannot use 'compiler' package, but mpi only seems to work with it)
         run: |
           conda install -y compilers
           conda install -y wisdem
@@ -100,19 +100,19 @@ jobs:
 
       # Install ROSCO toolbox
       - name: Install ROSCO toolbox
-        shell: bash
+        # shell: bash
         run: |
           python setup.py develop --compile-rosco
 
       # Install OpenFAST
       - name: Install OpenFAST
-        shell: bash
+        # shell: bash
         run: |
           conda install openfast
           
       # Run examples
       - name: Run examples
-        shell: bash
+        # shell: bash
         run: |
           cd Examples
           python run_examples.py
