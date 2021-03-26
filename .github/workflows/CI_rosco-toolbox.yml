@@ -28,7 +28,7 @@ jobs:
           auto-update-conda: true
           python-version: 3.8
           environment-file: environment.yml
-          activate-environment: rosco-env
+          # activate-environment: rosco-env
 
 
       # Install dependencies of ROSCO toolbox
@@ -65,13 +65,13 @@ jobs:
         python-version: ["3.8"]
         
     steps:
-      - name: Checkout repository and submodules
-        uses: actions/checkout@v2
+      # - name: Checkout repository and submodules
+      - uses: actions/checkout@v2
         with:
           submodules: recursive
       
-      - name: Setup environment
-        uses: conda-incubator/setup-miniconda@v2
+      # - name: Setup environment
+      - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
           channels: conda-forge, general
