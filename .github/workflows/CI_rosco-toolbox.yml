@@ -28,6 +28,8 @@ jobs:
           auto-update-conda: true
           python-version: 3.8
           environment-file: environment.yml
+          activate-environment: rosco-env
+
 
       # Install dependencies of ROSCO toolbox
       - name: Add dependencies ubuntu specific
@@ -76,6 +78,8 @@ jobs:
           auto-update-conda: true
           python-version: 3.8
           environment-file: environment.yml
+          activate-environment: rosco-env
+
 
       # Install dependencies of ROSCO toolbox
       - name: Add dependencies ubuntu specific
