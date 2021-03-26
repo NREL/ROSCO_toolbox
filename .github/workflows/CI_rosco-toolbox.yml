@@ -34,7 +34,7 @@ jobs:
       # Install dependencies of ROSCO toolbox
       - name: Add dependencies ubuntu specific
         if: false == contains( matrix.os, 'windows')
-        # shell: bash # putting in a shell command makes for compile linking problems later
+        shell: bash # putting in a shell command makes for compile linking problems later
         # (if you use the shell here, cannot use 'compiler' package, but mpi only seems to work with it)
         run: |
           conda install -y compilers
@@ -43,7 +43,7 @@ jobs:
 
       # Install ROSCO toolbox
       - name: Install ROSCO toolbox
-        # shell: bash
+        shell: bash
         run: |
           python setup.py develop --compile-rosco
           
