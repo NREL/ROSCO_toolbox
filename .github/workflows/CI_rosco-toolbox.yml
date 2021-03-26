@@ -34,11 +34,11 @@ jobs:
       # Install dependencies of ROSCO toolbox
       - name: Add dependencies ubuntu specific
         if: false == contains( matrix.os, 'windows')
-        shell: pwsh # putting in a shell command makes for compile linking problems later
+        shell: bash # putting in a shell command makes for compile linking problems later
         # (if you use the shell here, cannot use 'compiler' package, but mpi only seems to work with it)
         run: |
-          conda install -y wisdem
           conda install -y compilers
+          conda install -y wisdem
       # Install dependencies of ROSCO toolbox specific to windows
       # - name: Add dependencies windows specific
       #   if: contains( matrix.os, 'windows')
@@ -51,7 +51,7 @@ jobs:
 
       # Install ROSCO toolbox
       - name: Install ROSCO toolbox
-        shell: pwsh
+        shell: bash
         run: |
           python setup.py develop --compile-rosco
           
@@ -84,11 +84,11 @@ jobs:
       # Install dependencies of ROSCO toolbox
       - name: Add dependencies ubuntu specific
         if: false == contains( matrix.os, 'windows')
-        # shell: pwsh # putting in a shell command makes for compile linking problems later
+        shell: bash # putting in a shell command makes for compile linking problems later
         # (if you use the shell here, cannot use 'compiler' package, but mpi only seems to work with it)
         run: |
-          conda install -y wisdem
           conda install -y compilers
+          conda install -y wisdem
       # Install dependencies of ROSCO toolbox specific to windows
       # - name: Add dependencies windows specific
       #   if: contains( matrix.os, 'windows')
@@ -100,19 +100,19 @@ jobs:
 
       # Install ROSCO toolbox
       - name: Install ROSCO toolbox
-        shell: pwsh
+        shell: bash
         run: |
           python setup.py develop --compile-rosco
 
       # Install OpenFAST
       - name: Install OpenFAST
-        shell: pwsh
+        shell: bash
         run: |
           conda install openfast
           
       # Run examples
       - name: Run examples
-        shell: pwsh
+        shell: bash
         run: |
           cd Examples
           python run_examples.py
