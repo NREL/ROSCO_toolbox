@@ -1,5 +1,6 @@
 import os
 import unittest
+import sys
 from time import time
 import importlib
 
@@ -101,7 +102,4 @@ def suite():
 
 if __name__ == "__main__":
     result = unittest.TextTestRunner().run(suite())
-    if result.wasSuccessful():
-        exit(0)
-    else:
-        exit(1)
+    sys.exit(not result.wasSuccessful())
