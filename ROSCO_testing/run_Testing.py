@@ -98,12 +98,11 @@ if __name__ == "__main__":
 
     # ---- Define test type ----
     turbine2test = 'IEA-15MW'   # IEA-15MW or NREL-5MW
-    testtype     = 'heavy'       # lite, heavy, binary-comp, discon-comp
+    testtype     = 'lite'       # lite, heavy, binary-comp, discon-comp
 
     # Only fill one of these if comparing controllers
     rosco_binaries = [glob.glob(os.path.join(this_dir,'../ROSCO/build/libdiscon.*'))[0]] # Differently named libdiscons to compare
     discon_files = []   # Differently named DISCON.IN files to compare
-
 
     # Run testing
     run_testing(turbine2test, testtype, rosco_binaries=rosco_binaries, discon_files=discon_files, **rt_kwargs)
