@@ -14,7 +14,7 @@ nOF=60  # Number of openfast runs per finite-difference evaluation
 nC=$((nDV + nDV * nOF)) # Number of cores needed. Make sure to request an appropriate number of nodes = N / 36
 ## nC=72
 
-source activate /home/dzalkind/.conda-envs/weis-env4
+source activate /home/dzalkind/.conda-envs/rt-env
 which python
 
 # module purge
