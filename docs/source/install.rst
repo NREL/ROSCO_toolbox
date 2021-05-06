@@ -65,8 +65,7 @@ on Windows.
 CMake for developers (Mac/linux)
 .................................
 CMake_ provides a straightforward option for many users, particularly those on a Mac or Linux. 
-For windows users, d
-ROSCO can be compiled by first cloning the source code from git using:
+For windows users, ROSCO can be compiled by first cloning the source code from git using:
 ::
 
     git clone https://github.com/NREL/ROSCO.git
