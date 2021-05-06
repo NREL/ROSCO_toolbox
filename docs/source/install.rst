@@ -64,7 +64,7 @@ on Windows.
 
 CMake for developers (Mac/linux)
 .................................
-CMake_ provides a straightforward option for many users, particularly those on a Mac or Linux. 
+CMake_ provides a straightforward option for many users, particularly those on a Mac or Linux.
 For windows users, ROSCO can be compiled by first cloning the source code from git using:
 ::
 
@@ -86,7 +86,7 @@ This will generate a file called :code:`libdiscon.so` in the :code:`/ROSCO/insta
 CMake for developers/32-bit (Windows)
 ......................................
 
-To compile ROSCO on Windows, you first need a Fortran compiler. If you need a 32-bit DLL, then we recommend `installing MinGW <http://capsis.cirad.fr/capsis/documentation/mingw-installation>`_ (Section 2) and adding the ``bin`` folder to to your path.
+To compile ROSCO on Windows, you first need a Fortran compiler. If you need a 32-bit DLL, then we recommend `installing MinGW <http://capsis.cirad.fr/capsis/documentation/mingw-installation>`_ (Section 2).
 If you require a 64-bit version, you can install the MSYS2 toolchain through conda::
 
     conda install m2w64-toolchain libpython
