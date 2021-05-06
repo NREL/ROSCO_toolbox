@@ -65,7 +65,7 @@ on Windows.
 CMake for developers (Mac/linux)
 .................................
 CMake_ provides a straightforward option for many users, particularly those on a Mac or Linux.
-For windows users, ROSCO can be compiled by first cloning the source code from git using:
+On Mac/Linux, ROSCO can be compiled by first cloning the source code from git using:
 ::
 
     git clone https://github.com/NREL/ROSCO.git
@@ -79,7 +79,7 @@ And then compiling using CMake:
     cmake ..
     make install
 
-This will generate a file called :code:`libdiscon.so` in the :code:`/ROSCO/install/lib` directory. 
+This will generate a file called :code:`libdiscon.so` (Linux) or :code:`libdiscon.dylib` (Mac) in the :code:`/ROSCO/install/lib` directory. 
 
 
 
