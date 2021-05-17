@@ -7,7 +7,7 @@ Installing the ROSCO tools
 Depending on what is needed, a user can choose to use just the ROSCO controller or to use both the ROSCO controller and the toolbox.
 Both the controller and the toolbox should be installed if one wishes to leverage the full ROSCO toolchain.
 
-For users who to use the ROSCO toolbox (with or without the controller), please skip to the section on section :ref:`rosco_toolbox`. 
+For users who wish to use the ROSCO toolbox (with or without the controller), please skip to the section on section :ref:`rosco_toolbox`. 
 For users planning to only download and compile the ROSCO controller, please follow the instructions on :ref:`rosco_controller`. 
 For information on best practices to update to the most recent version of the ROSCO toolbox, see :ref:`updating_rt`.
 
