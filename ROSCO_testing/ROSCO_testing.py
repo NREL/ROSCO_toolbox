@@ -54,6 +54,7 @@ class ROSCO_testing():
         self.mpi_run = False
         self.mpi_comm_map_down = []
         self.outfile_fmt = 2 # 1 = .txt, 2 = binary, 3 = both
+        self.comp_dir = None
 
         # Setup turbine parameters 
         #  - Default to NREL 5MW 
@@ -477,12 +478,28 @@ class ROSCO_testing():
 
     def print_results(self,outfiles):
 
-        op = output_processing.output_processing()
-        FAST_Output = op.load_fast_out(outfiles, tmin=0)
+        figs_fname = 'test_outputs.pdf'
 
-        figs_fname = 'test_outputs.pdf'        
+        # Comparison plot
+        if self.comp_dir:
+            tmin = 100      # if comparing, I'd like to start the comparison at 100 seconds
+            op_comp = output_processing.output_processing()
+            outfiles_comp = [os.path.join(self.comp_dir,os.path.split(of)[1]) for of in outfiles]
+            try:
+                FAST_Comp = op_comp.load_fast_out(outfiles_comp, tmin=tmin)
+                figs_fname = 'comp_outputs.pdf'
+            except:
+                print('Could not load openfast outputs for comparison, only plotting current test')
+                tmin = 0
+                figs_fname = 'test_outputs.pdf'
+
+
+        op = output_processing.output_processing()
+        FAST_Output = op.load_fast_out(outfiles, tmin=tmin)
+
+                
         with PdfPages(os.path.join(self.runDir,figs_fname)) as pdf:
-            for fast_out in FAST_Output:
+            for i_out, fast_out in enumerate(FAST_Output):
                 if self.FAST_InputFile == 'NREL-5MW.fst':
                     plots2make = {'Baseline': ['Wind1VelX', 'GenPwr', 'RotSpeed', 'BldPitch1', 'GenTq']}
                 else:
@@ -498,6 +515,9 @@ class ROSCO_testing():
                         subplt = fig.add_subplot(gs0[cid])
                         try:
                             subplt.plot(fast_out['Time'], fast_out[channel])
+                            if self.comp_dir:
+                                subplt.plot(FAST_Comp[i_out]['Time'], FAST_Comp[i_out][channel])
+
                             unit_idx = fast_out['meta']['channels'].index(channel)
                             subplt.set_ylabel('{:^} \n ({:^})'.format(
                                                 channel,
