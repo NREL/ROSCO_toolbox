@@ -22,5 +22,5 @@ which python
 # module load comp-intel intel-mpi mkl
 
 
-python run_Testing.py
+mpirun -n 36 python run_Testing.py
 #  python weis_driver.py
