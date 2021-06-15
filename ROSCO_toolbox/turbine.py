@@ -607,7 +607,11 @@ class RotorPerformance():
         # --- Find TSR ---
         # Make finer mesh for Tip speed ratios at "optimal" blade pitch angle, do a simple lookup. 
         #       -- nja: this seems to work a little better than interpolating
-        performance_beta_max = np.ndarray.flatten(performance_table[:,self.max_ind[1]]) # performance metric at maximizing pitch angle
+        if len(self.max_ind)==1:
+            performance_beta_max = np.ndarray.flatten(performance_table[:,self.max_ind[1]]) # performance metric at maximizing pitch angle
+        else:
+            performance_beta_max = np.ndarray.flatten(performance_table[:,self.max_ind[1][-1]]) # performance metric at the last maximizing pitch angle
+            print('warning: repeated maximum values in a performance table and the last one was taken...')
         TSR_ind = np.arange(0,len(TSR_initial))
         TSR_fine_ind = np.linspace(TSR_initial[0],TSR_initial[-1],int(TSR_initial[-1] - TSR_initial[0])*100)
         f_TSR = interpolate.interp1d(TSR_initial,TSR_initial,bounds_error='False',kind='quadratic')    # interpolate function for Cp(tsr) values
