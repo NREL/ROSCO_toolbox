@@ -37,7 +37,7 @@ class ROSCO_testing():
 
         # Setup simulation parameters
         self.runDir = os.path.join(os.path.dirname( os.path.realpath(__file__) ), 'testing' )   # directory to run simulations in
-        self.windDir = None
+        self.wind_dir = None
         self.namebase = 'ROtest'    # root name for output simulations
         self.FAST_exe = 'openfast_single'       # name of openfast executable (may need full path)
         self.Turbsim_exe = 'turbsim_single'     # name of turbsim executable
@@ -146,8 +146,8 @@ class ROSCO_testing():
         iec.transient_dir_change = '-'  # '+','-','both': sign for transient events in EDC, EWS
         iec.transient_shear_orientation = 'v'  # 'v','h','both': vertical or horizontal shear for EWS
 
-        if self.windDir:
-            iec.wind_dir = self.windDir
+        if self.wind_dir:
+            iec.wind_dir = self.wind_dir
         else:
             iec.wind_dir = os.path.join(self.runDir, 'wind')
             
@@ -312,8 +312,8 @@ class ROSCO_testing():
         iec.uniqueSeeds = True
         iec.uniqueWaveSeeds = True
 
-        if self.windDir:
-            iec.wind_dir = self.windDir
+        if self.wind_dir:
+            iec.wind_dir = self.wind_dir
         else:
             iec.wind_dir = os.path.join(self.runDir, 'wind')
         iec.case_name_base = self.namebase
@@ -422,13 +422,13 @@ class ROSCO_testing():
         '''
         # Save initial run directory
         run_dir_init = self.runDir
-        wind_dir_init = self.windDir
+        wind_dir_init = self.wind_dir
         for ci, path in enumerate(controller_paths):
             # specify rosco path
             self.rosco_path = path
             # temporarily change run directories
             self.runDir = os.path.join(run_dir_init,'controller_{}'.format(ci)) # specific directory for each controller
-            self.windDir = os.path.join(run_dir_init, 'wind')  # wind in base runDir
+            self.wind_dir = os.path.join(run_dir_init, 'wind')  # wind in base runDir
 
             if testtype.lower() == 'light':
                 self.ROSCO_Test_lite(more_case_inputs=more_case_inputs, U=U)
@@ -439,7 +439,7 @@ class ROSCO_testing():
 
         # reset self
         self.runDir = run_dir_init
-        self.windDir = wind_dir_init
+        self.wind_dir = wind_dir_init
     
     def ROSCO_DISCON_Comp(self, DISCON_filenames, testtype='light', more_case_inputs={}, U=[]):
         '''
@@ -455,15 +455,15 @@ class ROSCO_testing():
 
         # Save initial run directory
         run_dir_init = self.runDir
-        wind_dir_init = self.windDir
+        wind_dir_init = self.wind_dir
         for ci, discon in enumerate(DISCON_filenames):
             # temporarily change run directories
             self.runDir = os.path.join(run_dir_init, 'controller_{}'.format(ci))
-            self.windDir = os.path.join(run_dir_init, 'wind')  # wind in base runDir
+            self.wind_dir = os.path.join(run_dir_init, 'wind')  # wind in base runDir
 
             # Point to different DISCON.IN files using more_case_inputs
             more_case_inputs[('ServoDyn', 'DLL_InFile')] = {'vals': [discon], 'group': 0}
-            self.windDir = os.path.join(run_dir_init, 'wind')  # wind in base runDir
+            self.wind_dir = os.path.join(run_dir_init, 'wind')  # wind in base runDir
 
             if testtype.lower() == 'light':
                 self.ROSCO_Test_lite(more_case_inputs=more_case_inputs, U=U)
@@ -474,7 +474,7 @@ class ROSCO_testing():
 
         # reset self
         self.runDir = run_dir_init
-        self.windDir = wind_dir_init
+        self.wind_dir = wind_dir_init
 
     def print_results(self,outfiles):
 
@@ -503,7 +503,7 @@ class ROSCO_testing():
                 if self.FAST_InputFile == 'NREL-5MW.fst':
                     plots2make = {'Baseline': ['Wind1VelX', 'GenPwr', 'RotSpeed', 'BldPitch1', 'GenTq']}
                 else:
-                    plots2make = {'Baseline': ['Wind1VelX', 'GenPwr', 'RotSpeed', 'BldPitch1', 'GenTq','PtfmPitch']}
+                    plots2make = {'Baseline': ['Wind1VelX', 'GenPwr', 'RotSpeed', 'BldPitch1', 'GenTq','PtfmPitch','TwrBsMyt']}
 
                 numplots    = len(plots2make)
                 maxchannels = np.max([len(plots2make[key]) for key in plots2make.keys()])
