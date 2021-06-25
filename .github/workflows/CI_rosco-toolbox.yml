@@ -104,3 +104,8 @@ jobs:
           cd Examples
           python run_examples.py
           
+      # Run Testing
+      - name: Run testing
+        run: |
+          cd ../ROSCO_testing
+          python ROSCO_testing.py
