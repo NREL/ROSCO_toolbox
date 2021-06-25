@@ -548,9 +548,7 @@ if __name__=='__main__':
 
     ## =================== INITIALIZATION ===================
     # Setup simulation parameters
-    # rt.runDir = '/Users/nabbas/Documents/Projects/ROSCO_dev/WSE_updates/WSE_Testing'              # directory for FAST simulations
     rt.namebase = 'IEA-15MW'     # Base name for FAST files 
-    # rt.FAST_exe = '/Users/nabbas/Documents/WindEnergyToolbox/WEIS/local/bin/openfast'     # OpenFAST executable path
     rt.FAST_exe = 'openfast'     # OpenFAST executable path
     rt.Turbsim_exe = 'turbsim'   # Turbsim executable path
     rt.FAST_ver = 'OpenFAST'     # FAST version
@@ -592,5 +590,5 @@ if __name__=='__main__':
     U = [5, 9, 12, 15]
 
     # Run test
-    rt.ROSCO_Controller_Comp(rt.rosco_path, testtype='light', more_case_inputs=case_inputs, U=U)
+    rt.ROSCO_Test_lite(more_case_inputs=case_inputs, U=U)
 
