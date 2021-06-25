@@ -563,7 +563,7 @@ if __name__=='__main__':
         rt.rosco_path = os.path.join(os.getcwd(), '../ROSCO/build/libdiscon.so')
     rt.dev_branch = True                # dev branch of Openfast?
     rt.debug_level = 2                  # debug level. 0 - no outputs, 1 - minimal outputs, 2 - all outputs
-    rt.overwrite = False                 # overwite fast sims?
+    rt.overwrite = False                # overwite fast sims?
     rt.cores = 4                        # number of cores if multiprocessings
     rt.mpi_run = False                  # run using mpi
     rt.mpi_comm_map_down = []           # core mapping for MPI
