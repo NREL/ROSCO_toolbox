@@ -105,9 +105,9 @@ class ROSCO_testing():
 
         # Check for time and wind inputs
         if ('Fst','TMax') in more_case_inputs.keys():
-            TMax = np.max(more_case_inputs[('Fst','TMax')]['vals'])
+            self.TMax = np.max(more_case_inputs[('Fst','TMax')]['vals'])
         else:
-            TMax = 330
+            self.TMax = 330
         
         if len(U) > 0:
             WindSpeeds = U
@@ -136,7 +136,7 @@ class ROSCO_testing():
         iec.Turbulence_Class = self.Turbulence_Class
         iec.D = fastRead.fst_vt['ElastoDyn']['TipRad']*2.
         iec.z_hub = fastRead.fst_vt['InflowWind']['RefHt']
-        iec.TMax = TMax
+        iec.TMax = self.TMax
 
         iec.dlc_inputs = {}
         iec.dlc_inputs['DLC'] = [1.1]  # ,6.1,6.3]
@@ -169,7 +169,7 @@ class ROSCO_testing():
             iec.comm_map_down = mpi_comm_map_down
 
         case_inputs = {}
-        case_inputs[("Fst", "TMax")] = {'vals': [TMax], 'group': 0}
+        case_inputs[("Fst", "TMax")] = {'vals': [self.TMax], 'group': 0}
         case_inputs[("Fst", "OutFileFmt")] = {'vals': [self.outfile_fmt], 'group': 0}
 
         case_inputs[('ServoDyn', 'GenTiStr')] = {'vals': ['True'], 'group': 0}
@@ -259,9 +259,9 @@ class ROSCO_testing():
 
         # Check for time and wind inputs
         if ('Fst','TMax') in more_case_inputs.keys():
-            TMax = np.max(more_case_inputs[('Fst','TMax')]['vals'])
+            self.TMax = np.max(more_case_inputs[('Fst','TMax')]['vals'])
         else:
-            TMax = 630
+            self.TMax = 630
         
         if len(U) > 0:
             WindSpeeds = U
@@ -300,7 +300,7 @@ class ROSCO_testing():
         iec.Turbulence_Class = self.Turbulence_Class
         iec.D = fastRead.fst_vt['ElastoDyn']['TipRad']*2.
         iec.z_hub = fastRead.fst_vt['InflowWind']['RefHt']
-        iec.TMax = TMax
+        iec.TMax = self.TMax
 
         iec.dlc_inputs = {}
         iec.dlc_inputs['DLC'] = [1.3, 1.4] 
@@ -334,7 +334,7 @@ class ROSCO_testing():
             iec.comm_map_down = mpi_comm_map_down
 
         case_inputs = {}
-        case_inputs[("Fst", "TMax")] = {'vals': [TMax], 'group': 0}
+        case_inputs[("Fst", "TMax")] = {'vals': [self.TMax], 'group': 0}
         case_inputs[("Fst", "OutFileFmt")] = {'vals': [self.outfile_fmt], 'group': 0}
 
         case_inputs[('ServoDyn', 'GenTiStr')] = {'vals': ['False'], 'group': 0}
@@ -480,6 +480,12 @@ class ROSCO_testing():
 
         figs_fname = 'test_outputs.pdf'
 
+        # remove initial transients if more than two minutes if simulation time
+        if self.TMax > 120:
+            tmin = 60
+        else:
+            tmin = 0
+
         # Comparison plot
         if self.comp_dir:
             tmin = 100      # if comparing, I'd like to start the comparison at 100 seconds
@@ -545,10 +551,10 @@ if __name__=='__main__':
     rt.runDir = '/Users/nabbas/Documents/Projects/ROSCO_dev/WSE_updates/WSE_Testing'              # directory for FAST simulations
     rt.namebase = 'IEA-15MW'     # Base name for FAST files 
     rt.FAST_exe = '/Users/nabbas/Documents/WindEnergyToolbox/WEIS/local/bin/openfast'     # OpenFAST executable path
-    rt.Turbsim_exe = '/Users/nabbas/openfast/install/bin/turbsim_single'   # Turbsim executable path
+    rt.Turbsim_exe = '/Users/nabbas/openfast/install/bin/turbsim_smain'   # Turbsim executable path
     rt.FAST_ver = 'OpenFAST'            # FAST version
-    rt.rosco_path = ['/Users/nabbas/Documents/WindEnergyToolbox/ROSCO/build-master/libdiscon.dylib',
-                    '/Users/nabbas/Documents/WindEnergyToolbox/ROSCO/build-wse/libdiscon.dylib',
+    rt.rosco_path = ['/Users/nabbas/Documents/WindEnergyToolbox/ROSCO/build-test/libdiscon.dylib',
+                    # '/Users/nabbas/Documents/WindEnergyToolbox/ROSCO/build-wse/libdiscon.dylib',
                     ]                   # path to compiled ROSCO controller
     rt.dev_branch = True                # dev branch of Openfast?
     rt.debug_level = 2                  # debug level. 0 - no outputs, 1 - minimal outputs, 2 - all outputs
@@ -564,8 +570,8 @@ if __name__=='__main__':
     # Setup turbine
     rt.Turbine_Class = 'I'
     rt.Turbulence_Class = 'B'
-    rt.FAST_directory = '/Users/nabbas/Documents/WindEnergyToolbox/WEIS/examples/OpenFAST_models/IEA-15-240-RWT/IEA-15-240-RWT-Monopile'
-    rt.FAST_InputFile = 'IEA-15-240-RWT-Monopile.fst'
+    rt.FAST_directory = '/Users/nabbas/Documents/WindEnergyToolbox/ROSCO_toolbox/Test_Cases/IEA-15-240-RWT-UMaineSemi'
+    rt.FAST_InputFile = 'IEA-15-240-RWT-UMaineSemi.fst'
 
     # Additional inputs 
     # ---- DT for this test! ----
