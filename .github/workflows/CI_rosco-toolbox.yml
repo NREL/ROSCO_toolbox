@@ -107,5 +107,5 @@ jobs:
       # Run Testing
       - name: Run testing
         run: |
-          cd ../ROSCO_testing
+          cd ROSCO_testing
           python ROSCO_testing.py
