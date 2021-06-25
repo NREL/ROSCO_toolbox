@@ -548,35 +548,38 @@ if __name__=='__main__':
 
     ## =================== INITIALIZATION ===================
     # Setup simulation parameters
-    rt.runDir = '/Users/nabbas/Documents/Projects/ROSCO_dev/WSE_updates/WSE_Testing'              # directory for FAST simulations
+    # rt.runDir = '/Users/nabbas/Documents/Projects/ROSCO_dev/WSE_updates/WSE_Testing'              # directory for FAST simulations
     rt.namebase = 'IEA-15MW'     # Base name for FAST files 
-    rt.FAST_exe = '/Users/nabbas/Documents/WindEnergyToolbox/WEIS/local/bin/openfast'     # OpenFAST executable path
-    rt.Turbsim_exe = '/Users/nabbas/openfast/install/bin/turbsim_smain'   # Turbsim executable path
-    rt.FAST_ver = 'OpenFAST'            # FAST version
-    rt.rosco_path = ['/Users/nabbas/Documents/WindEnergyToolbox/ROSCO/build-test/libdiscon.dylib',
-                    # '/Users/nabbas/Documents/WindEnergyToolbox/ROSCO/build-wse/libdiscon.dylib',
-                    ]                   # path to compiled ROSCO controller
+    # rt.FAST_exe = '/Users/nabbas/Documents/WindEnergyToolbox/WEIS/local/bin/openfast'     # OpenFAST executable path
+    rt.FAST_exe = 'openfast'     # OpenFAST executable path
+    rt.Turbsim_exe = 'turbsim'   # Turbsim executable path
+    rt.FAST_ver = 'OpenFAST'     # FAST version
+    # path to compiled ROSCO controller
+    if platform.system() == 'Windows':
+        rt.rosco_path = os.path.join(os.getcwd(), '../ROSCO/build/libdiscon.dll')
+    elif platform.system() == 'Darwin':
+        rt.rosco_path = os.path.join(os.getcwd(), '../ROSCO/build/libdiscon.dylib')
+    else:
+        rt.rosco_path = os.path.join(os.getcwd(), '../ROSCO/build/libdiscon.so')
     rt.dev_branch = True                # dev branch of Openfast?
     rt.debug_level = 2                  # debug level. 0 - no outputs, 1 - minimal outputs, 2 - all outputs
-    rt.overwrite = True                 # overwite fast sims?
+    rt.overwrite = False                 # overwite fast sims?
     rt.cores = 4                        # number of cores if multiprocessings
     rt.mpi_run = False                  # run using mpi
     rt.mpi_comm_map_down = []           # core mapping for MPI
     rt.outfile_fmt = 2                  # 1 = .txt, 2 = binary, 3 = both
     rt.dev_branch= 'True'
-    # Post Processing Parameters
-    reCrunch = True                     # re-run pCrunch?
 
     # Setup turbine
     rt.Turbine_Class = 'I'
     rt.Turbulence_Class = 'B'
-    rt.FAST_directory = '/Users/nabbas/Documents/WindEnergyToolbox/ROSCO_toolbox/Test_Cases/IEA-15-240-RWT-UMaineSemi'
+    rt.FAST_directory = os.path.join(os.getcwd(), '../Test_Cases/IEA-15-240-RWT-UMaineSemi')
     rt.FAST_InputFile = 'IEA-15-240-RWT-UMaineSemi.fst'
 
     # Additional inputs 
     # ---- DT for this test! ----
     case_inputs={}
-    case_inputs[('Fst', 'TMax')] = {'vals': [330], 'group': 0}
+    case_inputs[('Fst', 'TMax')] = {'vals': [60], 'group': 0}
     case_inputs[('Fst', 'DT')] = {'vals': [0.01], 'group': 0}
     case_inputs[('Fst', 'CompElast')] = {'vals': [1], 'group': 0}
 
