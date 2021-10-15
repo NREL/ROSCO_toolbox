@@ -1,7 +1,7 @@
 ROSCO toolbox documentation
 ===========================
 
-DEPRECIATED!
+DEPRECATED!
 ------------
 As of version 2.4.0, the ROSCO toolbox has been combined with the ROSCO git repository here:
 https://github.com/NREL/ROSCO

@@ -1,5 +1,5 @@
 # NREL's Reference OpenSource Controller (ROSCO) toolbox for wind turbine applications
-This tool-set has been DEPRECIATED!
+This tool-set has been DEPRECATED!
 
 As of version 2.4.0, the ROSCO toolbox has been combined with the ROSCO git repository here:
 [ROSCO](https://github.com/NREL/ROSCO) 
