@@ -43,7 +43,10 @@ turbine.load_from_fast(
 controller.tune_controller(turbine)
 
 # Write parameter input file
-param_file = os.path.join(this_dir, 'DISCON.IN')    
+example_out_dir = os.path.join(this_dir,'examples_out')
+if not os.path.isdir(example_out_dir):
+  os.makedirs(example_out_dir)
+param_file = os.path.join(example_out_dir, 'DISCON.IN')    
 write_DISCON(turbine,controller,param_file=param_file, txt_filename=path_params['rotor_performance_filename'])
 
 # Plot gain schedule
@@ -58,9 +61,7 @@ ax[1].set_ylabel('Integral Gain')
 
 plt.suptitle('Pitch Controller Gains')
 
-example_out_dir = os.path.join(this_dir,'examples_out')
-if not os.path.isdir(example_out_dir):
-  os.makedirs(example_out_dir)
+
 
 if False:
   plt.show()
