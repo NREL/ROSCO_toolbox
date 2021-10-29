@@ -207,8 +207,8 @@ class Controller():
         for i in range(len(TSR_op)):
             # Find pitch angle as a function of expected operating CP for each TSR
             Cp_TSR = np.ndarray.flatten(turbine.Cp.interp_surface(turbine.pitch_initial_rad, TSR_op[i]))     # all Cp values for a given tsr
-            Cp_op[i] = np.clip(Cp_op[i], np.min(Cp_TSR), np.max(Cp_TSR))        # saturate Cp values to be on Cp surface
             Cp_maxidx = Cp_TSR.argmax()                                                                 # Find maximum Cp value for this TSR
+            Cp_op[i] = np.clip(Cp_op[i], np.min(Cp_TSR[Cp_maxidx:]), np.max(Cp_TSR[Cp_maxidx:]))        # saturate Cp values to be on Cp surface
             f_cp_pitch = interpolate.interp1d(Cp_TSR[Cp_maxidx:],pitch_initial_rad[Cp_maxidx:])         # interpolate function for Cp(tsr) values
             # expected operation blade pitch values
             if v[i] <= turbine.v_rated and isinstance(self.min_pitch, float): # Below rated & defined min_pitch
@@ -278,7 +278,7 @@ class Controller():
         # -- Define some setpoints --
         # minimum rotor speed saturation limits
         if self.vs_minspd:
-            self.vs_minspd = np.maximum(self.vs_minspd, (turbine.TSR_operational * turbine.v_min / turbine.rotor_radius) * Ng)
+            self.vs_minspd = np.maximum(self.vs_minspd * Ng, (turbine.TSR_operational * turbine.v_min / turbine.rotor_radius) * Ng)
         else: 
             self.vs_minspd = (turbine.TSR_operational * turbine.v_min / turbine.rotor_radius) * Ng
         self.pc_minspd = self.vs_minspd
